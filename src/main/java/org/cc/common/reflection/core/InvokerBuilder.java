@@ -7,7 +7,11 @@ import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.RETURN;
 import static org.objectweb.asm.Opcodes.V1_6;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +30,9 @@ import org.cc.common.reflection.core.inst.CastInstruction;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
+
+import sun.tools.javap.JavapEnvironment;
+import sun.tools.javap.JavapPrinter;
 
 /**
  * Invoker构建器
@@ -152,6 +159,32 @@ public class InvokerBuilder extends ClassLoader{
 		return this;
 	}
 	
+	/**
+	 * 将生成的字节码dump到output中(相当于javap -c -l)
+	 * @param output
+	 * @throws Exception
+	 */
+	public void dump(OutputStream output) throws Exception{
+		get();
+		JavapEnvironment env = new JavapEnvironment();
+		Field f = JavapEnvironment.class.getDeclaredField("showDisassembled");
+		f.setAccessible(true);
+		f.set(env, true);
+		f=JavapEnvironment.class.getDeclaredField("showLineAndLocal");
+		f.setAccessible(true);
+		f.set(env, true);
+		PrintWriter out = new PrintWriter(output);
+		JavapPrinter printer = new JavapPrinter(new ByteArrayInputStream(bytecodes), out, env);
+        printer.print();
+        out.flush();
+	}
+	
+	
+	/**
+	 * 取得生成的Invoker对象
+	 * @return
+	 * @throws Exception
+	 */
 	public Invoker get() throws Exception{
 		if(invoker == null){
 			synchronized (this) {

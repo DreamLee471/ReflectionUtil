@@ -1,15 +1,16 @@
 package org.cc.common.reflection.ReflectionUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.cc.common.reflection.core.Invoker;
 import org.cc.common.reflection.core.InvokerBuilder;
 
-import com.sun.tools.javap.JavapTask;
-import com.sun.tools.javap.resources.javap;
-
 import junit.framework.TestCase;
+import sun.tools.javap.JavapEnvironment;
+import sun.tools.javap.JavapPrinter;
 
 public class MethodTest extends TestCase {
 
@@ -49,6 +50,7 @@ public class MethodTest extends TestCase {
 		Method concat = String.class.getMethod("concat", new Class[]{String.class});
 		builder.constant("hello").constant("world").methodInvoke(concat, null, null).ret(null);
 		assertEquals("helloworld", builder.get().invoke(new Object[]{}));
+		builder.dump(System.out);
 	}
 	
 }
