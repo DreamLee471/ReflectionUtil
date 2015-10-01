@@ -3,6 +3,7 @@ package org.cc.common.reflection.ReflectionUtil;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 
+import org.cc.common.reflection.core.Invoker;
 import org.cc.common.reflection.core.InvokerBuilder;
 
 import junit.framework.TestCase;
@@ -22,6 +23,21 @@ public class MethodTest extends TestCase {
 		assertEquals("aaahello", builder.get().invoke(new Object[]{"aaa"}));
 		assertEquals("aaabbbhello", builder.get().invoke(new Object[]{"aaabbb"}));
 		builder.store2file("d:/tt/ttt.class");
+	}
+	
+	
+	public void testSimpleReturn() throws Exception{
+		InvokerBuilder builder=InvokerBuilder.getInstance();
+		builder.constant("ttt").ret(null);
+		assertEquals("ttt", builder.get().invoke(new Object[]{}));
+		
+		builder=InvokerBuilder.getInstance();
+		Invoker invoker = builder.constant(1).boxing(int.class).ret(null).get();
+		assertEquals(1, invoker.invoke(new Object[]{}));
+		
+		builder=InvokerBuilder.getInstance();
+		invoker = builder.constant(12445L).boxing(long.class).ret(null).get();
+		assertEquals(12445L, invoker.invoke(new Object[]{}));
 	}
 	
 }

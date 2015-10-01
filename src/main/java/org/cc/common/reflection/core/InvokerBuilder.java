@@ -20,6 +20,7 @@ import org.cc.common.reflection.core.inst.StaticFieldInstruction;
 import org.cc.common.reflection.core.inst.StaticMethodInstruction;
 import org.cc.common.reflection.core.inst.StoreInstruction;
 import org.cc.common.reflection.core.inst.TryCatchInstruction;
+import org.cc.common.reflection.core.inst.BoxingInstruction;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
@@ -61,6 +62,11 @@ public class InvokerBuilder extends ClassLoader{
 	 */
 	public InvokerBuilder store(Class<?> type,String name){
 		instructions.add(new StoreInstruction(type, name));
+		return this;
+	}
+	
+	public InvokerBuilder boxing(Class<?> type){
+		instructions.add(new BoxingInstruction(type));
 		return this;
 	}
 	

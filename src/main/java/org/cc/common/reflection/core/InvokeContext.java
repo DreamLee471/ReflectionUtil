@@ -3,6 +3,11 @@ package org.cc.common.reflection.core;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 执行上下文
+ * @author dreamlee.lw
+ *
+ */
 public class InvokeContext {
 	
 	private Map<String,Integer> vars=new HashMap<String,Integer>();
