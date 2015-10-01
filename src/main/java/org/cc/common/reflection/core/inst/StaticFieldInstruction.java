@@ -1,14 +1,13 @@
-package com.alibaba.common.reflection.core.inst;
+package org.cc.common.reflection.core.inst;
 
 import static org.objectweb.asm.Opcodes.GETSTATIC;
 
 import java.lang.reflect.Field;
 
+import org.cc.common.reflection.core.Instruction;
+import org.cc.common.reflection.core.InvokeContext;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
-
-import com.alibaba.common.reflection.core.Instruction;
-import com.alibaba.common.reflection.core.InvokeContext;
 
 /**
  * 

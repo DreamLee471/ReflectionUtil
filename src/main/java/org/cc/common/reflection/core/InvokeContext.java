@@ -1,4 +1,4 @@
-package com.alibaba.common.reflection.core;
+package org.cc.common.reflection.core;
 
 import java.util.HashMap;
 import java.util.Map;

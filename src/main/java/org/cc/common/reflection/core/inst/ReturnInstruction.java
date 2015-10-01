@@ -1,10 +1,11 @@
-package com.alibaba.common.reflection.core.inst;
+package org.cc.common.reflection.core.inst;
 
 import org.objectweb.asm.MethodVisitor;
 
-import com.alibaba.common.reflection.core.Instruction;
-import com.alibaba.common.reflection.core.InvokeContext;
 import static org.objectweb.asm.Opcodes.*;
+
+import org.cc.common.reflection.core.Instruction;
+import org.cc.common.reflection.core.InvokeContext;
 
 public class ReturnInstruction implements Instruction {
 

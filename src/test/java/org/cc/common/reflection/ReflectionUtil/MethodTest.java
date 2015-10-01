@@ -1,9 +1,9 @@
-package com.alibaba.common.reflection.ReflectionUtil;
+package org.cc.common.reflection.ReflectionUtil;
 
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 
-import com.alibaba.common.reflection.core.InvokerBuilder;
+import org.cc.common.reflection.core.InvokerBuilder;
 
 import junit.framework.TestCase;
 

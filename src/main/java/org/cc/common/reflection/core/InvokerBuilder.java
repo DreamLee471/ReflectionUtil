@@ -1,4 +1,4 @@
-package com.alibaba.common.reflection.core;
+package org.cc.common.reflection.core;
 
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ACC_SUPER;
@@ -13,17 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.cc.common.reflection.core.inst.LdcInstruction;
+import org.cc.common.reflection.core.inst.MethodInstruction;
+import org.cc.common.reflection.core.inst.ReturnInstruction;
+import org.cc.common.reflection.core.inst.StaticFieldInstruction;
+import org.cc.common.reflection.core.inst.StaticMethodInstruction;
+import org.cc.common.reflection.core.inst.StoreInstruction;
+import org.cc.common.reflection.core.inst.TryCatchInstruction;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
-
-import com.alibaba.common.reflection.core.inst.LdcInstruction;
-import com.alibaba.common.reflection.core.inst.MethodInstruction;
-import com.alibaba.common.reflection.core.inst.ReturnInstruction;
-import com.alibaba.common.reflection.core.inst.StaticFieldInstruction;
-import com.alibaba.common.reflection.core.inst.StaticMethodInstruction;
-import com.alibaba.common.reflection.core.inst.StoreInstruction;
-import com.alibaba.common.reflection.core.inst.TryCatchInstruction;
 
 /**
  * Invoker构建器
