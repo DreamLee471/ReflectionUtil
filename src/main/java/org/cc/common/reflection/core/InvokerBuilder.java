@@ -20,7 +20,9 @@ import org.cc.common.reflection.core.inst.StaticFieldInstruction;
 import org.cc.common.reflection.core.inst.StaticMethodInstruction;
 import org.cc.common.reflection.core.inst.StoreInstruction;
 import org.cc.common.reflection.core.inst.TryCatchInstruction;
+import org.cc.common.reflection.core.inst.UnboxingInstruction;
 import org.cc.common.reflection.core.inst.BoxingInstruction;
+import org.cc.common.reflection.core.inst.CastInstruction;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
@@ -45,8 +47,8 @@ public class InvokerBuilder extends ClassLoader{
 	/**
 	 * 生成方法调用指令(非静态方法)
 	 * @param m
-	 * @param owner
-	 * @param args
+	 * @param owner 调用者(null表示取现有栈上的元素)
+	 * @param args 参数列表（变量名）,null表示取栈上元素，如果args为null，则owner必须为null
 	 * @return
 	 */
 	public InvokerBuilder methodInvoke(Method m,String owner,String[] args){
@@ -65,8 +67,34 @@ public class InvokerBuilder extends ClassLoader{
 		return this;
 	}
 	
+	/**
+	 * 将基本类型包装成对应的包装类
+	 * @param type 基本类型
+	 * @return
+	 */
 	public InvokerBuilder boxing(Class<?> type){
 		instructions.add(new BoxingInstruction(type));
+		return this;
+	}
+	
+	
+	/**
+	 * 将包装类转换为对应的基本类型
+	 * @param type 包装类型
+	 * @return
+	 */
+	public InvokerBuilder unboxing(Class<?> type){
+		instructions.add(new UnboxingInstruction(type));
+		return this;
+	}
+	
+	/**
+	 * 类型转换
+	 * @param type
+	 * @return
+	 */
+	public InvokerBuilder cast(Class<?> type){
+		instructions.add(new CastInstruction(type));
 		return this;
 	}
 	
@@ -170,7 +198,7 @@ public class InvokerBuilder extends ClassLoader{
 	 */
 	private Invoker generate() throws Exception {
 		ClassWriter cw=new ClassWriter(ClassWriter.COMPUTE_MAXS);
-		String className="com.ali.common.Generate"+(UUID.randomUUID().toString().replace("-", ""));
+		String className="org.cc.Generate"+(UUID.randomUUID().toString().replace("-", ""));
 		cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, className.replace(".", "/"), null, "java/lang/Object", new String[]{Type.getInternalName(Invoker.class)});
 		
 		MethodVisitor init = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);

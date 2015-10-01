@@ -32,6 +32,7 @@ public class StaticFieldInstruction implements Instruction {
 			throw new RuntimeException(e);
 		}
 		mv.visitFieldInsn(GETSTATIC, Type.getInternalName(type), fieldName, Type.getDescriptor(f.getType()));
+		context.setTopStackType(f.getType());
 	}
 
 }

@@ -24,10 +24,15 @@ public class StaticMethodInstruction implements Instruction {
 			if(method.getParameterTypes().length != args.length) throw new RuntimeException("参数不匹配!");
 			for(int i=0;i<args.length;i++){
 				MethodInstruction.loadArg(args[i],mv,context);
-				mv.visitTypeInsn(CHECKCAST, Type.getInternalName(method.getParameterTypes()[i]));
+				if(method.getParameterTypes()[i] != context.getType(args[i])){
+					mv.visitTypeInsn(CHECKCAST, Type.getInternalName(method.getParameterTypes()[i]));
+				}
 			}
 		}
 		mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(method.getDeclaringClass()), method.getName(), Type.getMethodDescriptor(method));
+		if(method.getReturnType()!= Void.class){
+			context.setTopStackType(method.getReturnType());
+		}
 	}
 
 }

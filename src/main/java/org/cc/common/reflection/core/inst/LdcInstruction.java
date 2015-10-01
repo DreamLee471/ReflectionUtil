@@ -19,6 +19,9 @@ public class LdcInstruction implements Instruction {
 		}else{
 			mv.visitLdcInsn(value);
 		}
+		if(value != null){
+			context.setTopStackType(value.getClass());
+		}
 	}
 
 }

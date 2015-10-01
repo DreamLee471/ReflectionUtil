@@ -26,5 +26,24 @@
 			<artifactId>asm</artifactId>
 			<version>3.1</version>
 		</dependency>
+		<dependency>
+          <groupId>com.sun</groupId>
+          <artifactId>tools</artifactId>
+          <version>1.7</version>
+          <scope>system</scope>
+          <systemPath>${java.home}/../lib/tools.jar</systemPath>
+        </dependency>
 	</dependencies>
+	
+	<profiles>
+	    <profile>
+	      <id>default-tools.jar</id>
+	      <activation>
+	        <property>
+	          <name>java.vendor</name>
+	          <value>Sun Microsystems Inc.</value>
+	        </property>
+	      </activation>
+	    </profile>
+	  </profiles>
 </project>

@@ -17,7 +17,7 @@ public class StoreInstruction implements Instruction {
 	}
 
 	public void generate(MethodVisitor mv, InvokeContext context) {
-		int vindex = context.var(name);
+		int vindex = context.var(name,type);
 		if(type.isPrimitive()){
 			visitPrimitive(mv,vindex);
 		}else{

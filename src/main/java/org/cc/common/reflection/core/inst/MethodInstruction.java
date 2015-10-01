@@ -29,19 +29,31 @@ public class MethodInstruction implements Instruction {
 	public void generate(MethodVisitor mv, InvokeContext context) {
 		if(owner!=null){
 			loadArg(owner,mv,context);
-			mv.visitTypeInsn(CHECKCAST, Type.getInternalName(method.getDeclaringClass()));
+			if(method.getDeclaringClass() != context.getType(owner)){
+				mv.visitTypeInsn(CHECKCAST, Type.getInternalName(method.getDeclaringClass()));
+			}
 		}
 		if(args!=null){
 			if(method.getParameterTypes().length != args.length) throw new RuntimeException("参数不匹配!");
 			for(int i=0;i<args.length;i++){
 				loadArg(args[i],mv,context);
-				mv.visitTypeInsn(CHECKCAST, Type.getInternalName(method.getParameterTypes()[i]));
+				if(method.getParameterTypes()[i] != context.getType(args[i])){
+					mv.visitTypeInsn(CHECKCAST, Type.getInternalName(method.getParameterTypes()[i]));
+				}
 			}
 		}
+		
+		if((args == null || args.length==0) && owner !=null){
+			throw new RuntimeException("if args is null,owner must be null!");
+		}
+		
 		if (method.getDeclaringClass().isInterface()) {
 			mv.visitMethodInsn(INVOKEINTERFACE, Type.getDescriptor(method.getDeclaringClass()), method.getName(), Type.getMethodDescriptor(method));
 		} else {
 			mv.visitMethodInsn(INVOKEVIRTUAL, Type.getInternalName(method.getDeclaringClass()), method.getName(), Type.getMethodDescriptor(method));
+		}
+		if(method.getReturnType() != Void.class){
+			context.setTopStackType(method.getReturnType());
 		}
 	}
 

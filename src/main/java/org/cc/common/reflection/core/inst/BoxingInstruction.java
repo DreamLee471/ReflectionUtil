@@ -19,9 +19,7 @@ public class BoxingInstruction implements Instruction {
 	public BoxingInstruction(Class<?> type) {
 		this.type = type;
 	}
-
-
-
+	
 	public void generate(MethodVisitor mv, InvokeContext context) {
 		if(type!=null && type.isPrimitive()){
 			if(type == Integer.TYPE){

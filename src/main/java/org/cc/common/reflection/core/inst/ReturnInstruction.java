@@ -19,7 +19,6 @@ public class ReturnInstruction implements Instruction {
 		if(name != null && !name.isEmpty()){
 			mv.visitVarInsn(ALOAD, context.var(name));
 		}
-		mv.visitTypeInsn(CHECKCAST, "java/lang/Object");
 		mv.visitInsn(ARETURN);
 	}
 

@@ -6,6 +6,9 @@ import java.lang.reflect.Method;
 import org.cc.common.reflection.core.Invoker;
 import org.cc.common.reflection.core.InvokerBuilder;
 
+import com.sun.tools.javap.JavapTask;
+import com.sun.tools.javap.resources.javap;
+
 import junit.framework.TestCase;
 
 public class MethodTest extends TestCase {
@@ -38,6 +41,14 @@ public class MethodTest extends TestCase {
 		builder=InvokerBuilder.getInstance();
 		invoker = builder.constant(12445L).boxing(long.class).ret(null).get();
 		assertEquals(12445L, invoker.invoke(new Object[]{}));
+	}
+	
+	
+	public void testMethodInvokerWithoutOwner() throws Exception{
+		InvokerBuilder builder=InvokerBuilder.getInstance();
+		Method concat = String.class.getMethod("concat", new Class[]{String.class});
+		builder.constant("hello").constant("world").methodInvoke(concat, null, null).ret(null);
+		assertEquals("helloworld", builder.get().invoke(new Object[]{}));
 	}
 	
 }
