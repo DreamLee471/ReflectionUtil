@@ -7,7 +7,7 @@ public class InvokeContext {
 	
 	private Map<String,Integer> vars=new HashMap<String,Integer>();
 	
-	private int current=1;
+	private int current=2;
 	
 	public int getVar(String varname){
 		if(!vars.containsKey(varname)){
