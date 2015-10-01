@@ -28,8 +28,10 @@ public class MethodInstruction implements Instruction {
 	}
 
 	public void generate(MethodVisitor mv, InvokeContext context) {
-		loadArg(owner,mv,context);
-		mv.visitTypeInsn(CHECKCAST, Type.getInternalName(method.getDeclaringClass()));
+		if(owner!=null){
+			loadArg(owner,mv,context);
+			mv.visitTypeInsn(CHECKCAST, Type.getInternalName(method.getDeclaringClass()));
+		}
 		if(args!=null){
 			if(method.getParameterTypes().length != args.length) throw new RuntimeException("参数不匹配!");
 			for(int i=0;i<args.length;i++){
@@ -51,7 +53,7 @@ public class MethodInstruction implements Instruction {
 			mv.visitLdcInsn(index);
 			mv.visitInsn(AALOAD);
 		}else{
-			mv.visitVarInsn(ALOAD, context.getVar(arg));
+			mv.visitVarInsn(ALOAD, context.var(arg));
 		}
 	}
 }

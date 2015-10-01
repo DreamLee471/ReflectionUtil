@@ -9,7 +9,7 @@ public class InvokeContext {
 	
 	private int current=2;
 	
-	public int getVar(String varname){
+	public int var(String varname){
 		if(!vars.containsKey(varname)){
 			vars.put(varname, current++);
 		}

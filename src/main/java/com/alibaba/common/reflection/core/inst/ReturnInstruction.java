@@ -15,7 +15,9 @@ public class ReturnInstruction implements Instruction {
 	}
 
 	public void generate(MethodVisitor mv, InvokeContext context) {
-		mv.visitVarInsn(ALOAD, context.getVar(name));
+		if(name != null && !name.isEmpty()){
+			mv.visitVarInsn(ALOAD, context.var(name));
+		}
 		mv.visitTypeInsn(CHECKCAST, "java/lang/Object");
 		mv.visitInsn(ARETURN);
 	}
