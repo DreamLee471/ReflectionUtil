@@ -32,9 +32,10 @@ public class StaticMethodInstruction implements Instruction {
 		}
 		mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(method.getDeclaringClass()), method.getName(), Type.getMethodDescriptor(method));
 		
-		if(args!=null){
-			context.popStackTypes(args.length);
+		if(args==null || args.length==0){
+			context.popStackTypes(method.getParameterCount());
 		}
+		
 		if(method.getReturnType()!= Void.class){
 			context.setTopStackType(method.getReturnType());
 		}

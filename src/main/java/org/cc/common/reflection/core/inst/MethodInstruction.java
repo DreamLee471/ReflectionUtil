@@ -55,12 +55,12 @@ public class MethodInstruction implements Instruction {
 		} else {
 			mv.visitMethodInsn(INVOKEVIRTUAL, Type.getInternalName(method.getDeclaringClass()), method.getName(), Type.getMethodDescriptor(method));
 		}
-		if(owner!=null){
+		if(owner==null){
 			context.popTopStackType();
 		}
 		
-		if(args!=null){
-			context.popStackTypes(args.length);
+		if(args==null || args.length==0){
+			context.popStackTypes(method.getParameterCount());
 		}
 		
 		if(method.getReturnType() != Void.class){
