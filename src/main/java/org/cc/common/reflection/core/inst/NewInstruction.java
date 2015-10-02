@@ -21,10 +21,10 @@ import org.objectweb.asm.Type;
 public class NewInstruction implements Instruction {
 
 	private Class<?> type;
-	private Constructor constructor;
+	private Constructor<?> constructor;
 	private String[] args;
 	
-	public NewInstruction(Class<?> type, Constructor constructor,String[] args) {
+	public NewInstruction(Class<?> type, Constructor<?> constructor,String[] args) {
 		this.type = type;
 		this.constructor = constructor;
 		this.args=args;

@@ -69,6 +69,28 @@ public class InvokerBuilder extends ClassLoader{
 	}
 	
 	/**
+	 * 生成方法调用指令,调用者使用栈顶元素(非静态方法)
+	 * @param m
+	 * @param args 参数列表（变量名）,null表示取栈上元素，如果args为null，则owner必须为null
+	 * @return
+	 */
+	public InvokerBuilder methodInvoke(Method m,String[] args){
+		instructions.add(new MethodInstruction(m, null, args));
+		return this;
+	}
+	
+	
+	/**
+	 * 生成方法调用指令,调用者及参数使用现有栈上的元素(非静态方法)
+	 * @param m
+	 * @return
+	 */
+	public InvokerBuilder methodInvoke(Method m){
+		instructions.add(new MethodInstruction(m, null, null));
+		return this;
+	}
+	
+	/**
 	 * 赋值语句
 	 * @param type
 	 * @param name
@@ -198,11 +220,20 @@ public class InvokerBuilder extends ClassLoader{
 	
 	/**
 	 * 生成return语句
-	 * @param name 返回的变量，null表示返回栈顶的元素
+	 * @param name 返回的变量
 	 * @return
 	 */
 	public InvokerBuilder ret(String name){
 		instructions.add(new ReturnInstruction(name));
+		return this;
+	}
+	
+	/**
+	 * 生成return语句,返回栈顶元素
+	 * @return
+	 */
+	public InvokerBuilder ret(){
+		instructions.add(new ReturnInstruction(null));
 		return this;
 	}
 	

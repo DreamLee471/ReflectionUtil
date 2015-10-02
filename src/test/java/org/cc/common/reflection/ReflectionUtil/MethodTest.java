@@ -1,19 +1,14 @@
 package org.cc.common.reflection.ReflectionUtil;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.cc.common.reflection.core.Invoker;
 import org.cc.common.reflection.core.InvokerBuilder;
-import org.objectweb.asm.Type;
 
 import junit.framework.TestCase;
-import sun.tools.javap.JavapEnvironment;
-import sun.tools.javap.JavapPrinter;
 
 public class MethodTest extends TestCase {
 
@@ -53,14 +48,13 @@ public class MethodTest extends TestCase {
 		Method concat = String.class.getMethod("concat", new Class[]{String.class});
 		builder.constant("hello").constant("world").methodInvoke(concat, null, null).ret(null);
 		assertEquals("helloworld", builder.get().invoke(new Object[]{}));
-		builder.dump(System.out);
 	}
 	
 	
 	public void testDump() throws Exception{
 		InvokerBuilder builder=InvokerBuilder.getInstance();
 		Method concat = String.class.getMethod("concat", new Class[]{String.class});
-		builder.constant("hello").constant("world").methodInvoke(concat, null, null).ret(null);
+		builder.constant("hello").constant("world").methodInvoke(concat).ret();
 		ByteArrayOutputStream bos=new ByteArrayOutputStream();
 		builder.dump(bos);
 		assertTrue(bos.toByteArray().length>0);
