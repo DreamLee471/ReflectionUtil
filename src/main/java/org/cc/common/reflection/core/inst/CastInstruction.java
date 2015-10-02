@@ -21,6 +21,7 @@ public class CastInstruction implements Instruction {
 
 	public void generate(MethodVisitor mv, InvokeContext context) {
 		mv.visitTypeInsn(Opcodes.CHECKCAST, Type.getInternalName(type));
+		context.replaceTopType(type);
 	}
 
 }

@@ -1,11 +1,14 @@
 package org.cc.common.reflection.core.inst;
 
-import static org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.Opcodes.CHECKCAST;
+import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
+import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 
 import java.lang.reflect.Method;
 
 import org.cc.common.reflection.core.Instruction;
 import org.cc.common.reflection.core.InvokeContext;
+import org.cc.common.reflection.core.util.Utils;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
@@ -28,7 +31,7 @@ public class MethodInstruction implements Instruction {
 
 	public void generate(MethodVisitor mv, InvokeContext context) {
 		if(owner!=null){
-			loadArg(owner,mv,context);
+			Utils.loadArg(owner,mv,context);
 			if(method.getDeclaringClass() != context.getType(owner)){
 				mv.visitTypeInsn(CHECKCAST, Type.getInternalName(method.getDeclaringClass()));
 			}
@@ -36,7 +39,7 @@ public class MethodInstruction implements Instruction {
 		if(args!=null){
 			if(method.getParameterTypes().length != args.length) throw new RuntimeException("参数不匹配!");
 			for(int i=0;i<args.length;i++){
-				loadArg(args[i],mv,context);
+				Utils.loadArg(args[i],mv,context);
 				if(method.getParameterTypes()[i] != context.getType(args[i])){
 					mv.visitTypeInsn(CHECKCAST, Type.getInternalName(method.getParameterTypes()[i]));
 				}
@@ -52,19 +55,16 @@ public class MethodInstruction implements Instruction {
 		} else {
 			mv.visitMethodInsn(INVOKEVIRTUAL, Type.getInternalName(method.getDeclaringClass()), method.getName(), Type.getMethodDescriptor(method));
 		}
+		if(owner!=null){
+			context.popTopStackType();
+		}
+		
+		if(args!=null){
+			context.popStackTypes(args.length);
+		}
+		
 		if(method.getReturnType() != Void.class){
 			context.setTopStackType(method.getReturnType());
-		}
-	}
-
-	public static void loadArg(String arg,MethodVisitor mv,InvokeContext context){
-		if(arg.startsWith("$")){
-			int index = Integer.valueOf(arg.substring(1));
-			mv.visitVarInsn(ALOAD, 1);
-			mv.visitLdcInsn(index);
-			mv.visitInsn(AALOAD);
-		}else{
-			mv.visitVarInsn(ALOAD, context.var(arg));
 		}
 	}
 }

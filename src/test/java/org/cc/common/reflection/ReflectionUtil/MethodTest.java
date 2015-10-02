@@ -1,12 +1,15 @@
 package org.cc.common.reflection.ReflectionUtil;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.cc.common.reflection.core.Invoker;
 import org.cc.common.reflection.core.InvokerBuilder;
+import org.objectweb.asm.Type;
 
 import junit.framework.TestCase;
 import sun.tools.javap.JavapEnvironment;
@@ -53,4 +56,25 @@ public class MethodTest extends TestCase {
 		builder.dump(System.out);
 	}
 	
+	
+	public void testDump() throws Exception{
+		InvokerBuilder builder=InvokerBuilder.getInstance();
+		Method concat = String.class.getMethod("concat", new Class[]{String.class});
+		builder.constant("hello").constant("world").methodInvoke(concat, null, null).ret(null);
+		ByteArrayOutputStream bos=new ByteArrayOutputStream();
+		builder.dump(bos);
+		assertTrue(bos.toByteArray().length>0);
+	}
+	
+	
+	public void testNew() throws Exception{
+		InvokerBuilder builder=InvokerBuilder.getInstance();
+		Constructor<StringBuilder> init=StringBuilder.class.getConstructor(String.class);
+		Method append = StringBuilder.class.getMethod("append", String.class);
+		Method toString=Object.class.getMethod("toString", new Class[]{});
+		builder.constant("hello").store("a").newInstance(StringBuilder.class, init,new String[]{"a"}).store("sb")
+				.constant("world").store("t").methodInvoke(append, "sb", new String[]{"t"})
+				.methodInvoke(toString, null, null).ret(null);
+		assertEquals("helloworld", builder.get().invoke(new Object[]{}));
+	}
 }

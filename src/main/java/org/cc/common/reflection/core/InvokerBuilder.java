@@ -11,22 +11,27 @@ import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.cc.common.reflection.core.inst.BoxingInstruction;
+import org.cc.common.reflection.core.inst.CastInstruction;
 import org.cc.common.reflection.core.inst.LdcInstruction;
+import org.cc.common.reflection.core.inst.LoadInstruction;
 import org.cc.common.reflection.core.inst.MethodInstruction;
+import org.cc.common.reflection.core.inst.NewInstruction;
+import org.cc.common.reflection.core.inst.Pop2Instruction;
+import org.cc.common.reflection.core.inst.PopInstruction;
 import org.cc.common.reflection.core.inst.ReturnInstruction;
 import org.cc.common.reflection.core.inst.StaticFieldInstruction;
 import org.cc.common.reflection.core.inst.StaticMethodInstruction;
 import org.cc.common.reflection.core.inst.StoreInstruction;
 import org.cc.common.reflection.core.inst.TryCatchInstruction;
 import org.cc.common.reflection.core.inst.UnboxingInstruction;
-import org.cc.common.reflection.core.inst.BoxingInstruction;
-import org.cc.common.reflection.core.inst.CastInstruction;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
@@ -74,6 +79,30 @@ public class InvokerBuilder extends ClassLoader{
 		return this;
 	}
 	
+	
+	/**
+	 * 赋值语句
+	 * @param type
+	 * @param name
+	 * @return
+	 */
+	public InvokerBuilder store(String name){
+		instructions.add(new StoreInstruction(null, name));
+		return this;
+	}
+	
+	
+	/**
+	 * 取值语句
+	 * @param type
+	 * @param name
+	 * @return
+	 */
+	public InvokerBuilder load(Class<?> type,String name){
+		instructions.add(new LoadInstruction(type, name));
+		return this;
+	}
+	
 	/**
 	 * 将基本类型包装成对应的包装类
 	 * @param type 基本类型
@@ -81,6 +110,15 @@ public class InvokerBuilder extends ClassLoader{
 	 */
 	public InvokerBuilder boxing(Class<?> type){
 		instructions.add(new BoxingInstruction(type));
+		return this;
+	}
+	
+	/**
+	 * 将基本类型包装成对应的包装类(使用栈顶的推断类型)
+	 * @return
+	 */
+	public InvokerBuilder boxing(){
+		instructions.add(new BoxingInstruction(null));
 		return this;
 	}
 	
@@ -92,6 +130,15 @@ public class InvokerBuilder extends ClassLoader{
 	 */
 	public InvokerBuilder unboxing(Class<?> type){
 		instructions.add(new UnboxingInstruction(type));
+		return this;
+	}
+	
+	/**
+	 * 将包装类转换为对应的基本类型(使用栈顶的推断类型)
+	 * @return
+	 */
+	public InvokerBuilder unboxing(){
+		instructions.add(new UnboxingInstruction(null));
 		return this;
 	}
 	
@@ -151,11 +198,52 @@ public class InvokerBuilder extends ClassLoader{
 	
 	/**
 	 * 生成return语句
-	 * @param name
+	 * @param name 返回的变量，null表示返回栈顶的元素
 	 * @return
 	 */
 	public InvokerBuilder ret(String name){
 		instructions.add(new ReturnInstruction(name));
+		return this;
+	}
+	
+	
+	/**
+	 * 创建对象,默认调用 DUP(如果仅仅是想调用构造方法，而不使用生成的对象，在调用完new后调用pop)
+	 * @param type
+	 * @param constructor
+	 * @return
+	 */
+	public InvokerBuilder newInstance(Class<?> type,Constructor<?> constructor,String[] args){
+		instructions.add(new NewInstruction(type, constructor,args));
+		return this;
+	}
+	
+	/**
+	 * 将栈顶的一个槽位弹出
+	 * @return
+	 */
+	public InvokerBuilder pop(){
+		instructions.add(new PopInstruction());
+		return this;
+	}
+	
+	/**
+	 * 将栈顶的两个槽位弹出(用于long和double类型)
+	 * @return
+	 */
+	public InvokerBuilder pop2(){
+		instructions.add(new Pop2Instruction());
+		return this;
+	}
+	
+	
+	/**
+	 * 自定义指令
+	 * @param inst
+	 * @return
+	 */
+	public InvokerBuilder customize(Instruction inst){
+		instructions.add(inst);
 		return this;
 	}
 	
@@ -243,8 +331,12 @@ public class InvokerBuilder extends ClassLoader{
 		
 		MethodVisitor invoke = cw.visitMethod(ACC_PUBLIC, "invoke", "([Ljava/lang/Object;)Ljava/lang/Object;", null, null);
 		InvokeContext context=new InvokeContext();
-		for(Instruction inst:instructions){
-			inst.generate(invoke,context);
+		for(int i=0;i<instructions.size();i++){
+			if(i<instructions.size()-1){
+				context.setNextInst(instructions.get(i+1));
+			}
+			instructions.get(i).generate(invoke,context);
+			context.setPreInst(instructions.get(i));
 		}
 		invoke.visitMaxs(1, 1);
 		invoke.visitEnd();
