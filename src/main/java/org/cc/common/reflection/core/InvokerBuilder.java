@@ -1,11 +1,6 @@
 package org.cc.common.reflection.core;
 
-import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
-import static org.objectweb.asm.Opcodes.ACC_SUPER;
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
-import static org.objectweb.asm.Opcodes.RETURN;
-import static org.objectweb.asm.Opcodes.V1_6;
+import static org.objectweb.asm.Opcodes.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
@@ -20,6 +15,7 @@ import java.util.UUID;
 
 import org.cc.common.reflection.core.inst.BoxingInstruction;
 import org.cc.common.reflection.core.inst.CastInstruction;
+import org.cc.common.reflection.core.inst.Expression;
 import org.cc.common.reflection.core.inst.LdcInstruction;
 import org.cc.common.reflection.core.inst.LoadInstruction;
 import org.cc.common.reflection.core.inst.MethodInstruction;
@@ -32,12 +28,12 @@ import org.cc.common.reflection.core.inst.StaticMethodInstruction;
 import org.cc.common.reflection.core.inst.StoreInstruction;
 import org.cc.common.reflection.core.inst.TryCatchInstruction;
 import org.cc.common.reflection.core.inst.UnboxingInstruction;
+import org.cc.common.reflection.core.tools.javap.JavapEnvironment;
+import org.cc.common.reflection.core.tools.javap.JavapPrinter;
+import org.cc.common.reflection.core.util.ReflectionConstants;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
-
-import sun.tools.javap.JavapEnvironment;
-import sun.tools.javap.JavapPrinter;
 
 /**
  * Invoker构建器
@@ -52,8 +48,15 @@ public class InvokerBuilder extends ClassLoader{
 	
 	private byte[] bytecodes;
 	
+	private int version = 1;
+	
 	public static InvokerBuilder getInstance(){
 		return new InvokerBuilder();
+	}
+	
+	public InvokerBuilder version(int version){
+		this.version=version;
+		return this;
 	}
 	
 	/**
@@ -63,7 +66,7 @@ public class InvokerBuilder extends ClassLoader{
 	 * @param args 参数列表（变量名）,null表示取栈上元素，如果args为null，则owner必须为null
 	 * @return
 	 */
-	public InvokerBuilder methodInvoke(Method m,String owner,String[] args){
+	public InvokerBuilder methodInvoke(Method m,Expression owner,Expression... args){
 		instructions.add(new MethodInstruction(m, owner, args));
 		return this;
 	}
@@ -74,7 +77,7 @@ public class InvokerBuilder extends ClassLoader{
 	 * @param args 参数列表（变量名）,null表示取栈上元素，如果args为null，则owner必须为null
 	 * @return
 	 */
-	public InvokerBuilder methodInvoke(Method m,String[] args){
+	public InvokerBuilder methodInvoke(Method m,Expression[] args){
 		instructions.add(new MethodInstruction(m, null, args));
 		return this;
 	}
@@ -98,6 +101,12 @@ public class InvokerBuilder extends ClassLoader{
 	 */
 	public InvokerBuilder store(Class<?> type,String name){
 		instructions.add(new StoreInstruction(type, name));
+		return this;
+	}
+	
+	
+	public InvokerBuilder exp(Expression exp){
+		instructions.add(exp);
 		return this;
 	}
 	
@@ -244,7 +253,7 @@ public class InvokerBuilder extends ClassLoader{
 	 * @param constructor
 	 * @return
 	 */
-	public InvokerBuilder newInstance(Class<?> type,Constructor<?> constructor,String[] args){
+	public InvokerBuilder newInstance(Class<?> type,Constructor<?> constructor,String... args){
 		instructions.add(new NewInstruction(type, constructor,args));
 		return this;
 	}
@@ -351,7 +360,16 @@ public class InvokerBuilder extends ClassLoader{
 	private Invoker generate() throws Exception {
 		ClassWriter cw=new ClassWriter(ClassWriter.COMPUTE_MAXS);
 		String className="org.cc.Generate"+(UUID.randomUUID().toString().replace("-", ""));
-		cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, className.replace(".", "/"), null, "java/lang/Object", new String[]{Type.getInternalName(Invoker.class)});
+		int version0=V1_6;
+		switch(version){
+		case ReflectionConstants.Version.V6:
+			version0=V1_6;break;
+		case ReflectionConstants.Version.V7:
+			version0=V1_7;break;
+		case ReflectionConstants.Version.V8:
+			version0=V1_8;break;
+		}
+		cw.visit(version0, ACC_PUBLIC + ACC_SUPER, className.replace(".", "/"), null, "java/lang/Object", new String[]{Type.getInternalName(Invoker.class)});
 		
 		MethodVisitor init = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
 		init.visitVarInsn(ALOAD, 0);

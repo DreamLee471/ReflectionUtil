@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 
 import org.cc.common.reflection.core.Invoker;
 import org.cc.common.reflection.core.InvokerBuilder;
+import org.cc.common.reflection.core.util.Ops;
 
 import junit.framework.TestCase;
 
@@ -16,11 +17,11 @@ public class MethodTest extends TestCase {
 		InvokerBuilder builder=InvokerBuilder.getInstance();
 		Method toString = String.class.getMethod("concat", new Class[]{String.class});
 		Method println = PrintStream.class.getMethod("println", new Class[]{String.class});
-		builder.constant("hello").store(String.class, "end").methodInvoke(toString, "$0", new String[]{"end"})
+		builder.constant("hello").store(String.class, "end").methodInvoke(toString, Ops.$(0), Ops.v("end"))
 				.store(String.class, "tt")
 				.staticField(System.class, "out")
 				.constant("hello world!")
-				.methodInvoke(println, null, null)
+				.methodInvoke(println)
 				.ret("tt");
 		assertEquals("aaahello", builder.get().invoke(new Object[]{"aaa"}));
 		assertEquals("aaabbbhello", builder.get().invoke(new Object[]{"aaabbb"}));
@@ -46,7 +47,7 @@ public class MethodTest extends TestCase {
 	public void testMethodInvokerWithoutOwner() throws Exception{
 		InvokerBuilder builder=InvokerBuilder.getInstance();
 		Method concat = String.class.getMethod("concat", new Class[]{String.class});
-		builder.constant("hello").constant("world").methodInvoke(concat, null, null).ret(null);
+		builder.constant("hello").constant("world").methodInvoke(concat).ret();
 		assertEquals("helloworld", builder.get().invoke(new Object[]{}));
 	}
 	
@@ -58,6 +59,7 @@ public class MethodTest extends TestCase {
 		ByteArrayOutputStream bos=new ByteArrayOutputStream();
 		builder.dump(bos);
 		assertTrue(bos.toByteArray().length>0);
+		System.out.println(new String(bos.toByteArray()));
 	}
 	
 	
@@ -66,9 +68,9 @@ public class MethodTest extends TestCase {
 		Constructor<StringBuilder> init=StringBuilder.class.getConstructor(String.class);
 		Method append = StringBuilder.class.getMethod("append", String.class);
 		Method toString=Object.class.getMethod("toString", new Class[]{});
-		builder.constant("hello").store("a").newInstance(StringBuilder.class, init,new String[]{"a"}).store("sb")
-				.constant("world").store("t").methodInvoke(append, "sb", new String[]{"t"})
-				.methodInvoke(toString, null, null).ret(null);
+		builder.constant("hello").store("a").newInstance(StringBuilder.class, init,"a").store("sb")
+				.constant("world").store("t").methodInvoke(append, Ops.v("sb"), Ops.v("t"))
+				.methodInvoke(toString).ret();
 		assertEquals("helloworld", builder.get().invoke(new Object[]{}));
 	}
 }

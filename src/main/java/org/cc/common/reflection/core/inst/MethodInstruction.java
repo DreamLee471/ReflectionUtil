@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 
 import org.cc.common.reflection.core.Instruction;
 import org.cc.common.reflection.core.InvokeContext;
-import org.cc.common.reflection.core.util.Utils;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
@@ -20,33 +19,33 @@ import org.objectweb.asm.Type;
 public class MethodInstruction implements Instruction {
 
 	private Method method;
-	private String[] args;
-	private String owner;
+	private Expression[] exps;
+	private Expression owner;
 
-	public MethodInstruction(Method method, String owner, String[] args) {
+	public MethodInstruction(Method method, Expression owner, Expression[] exps) {
 		this.method = method;
 		this.owner = owner;
-		this.args = args;
+		this.exps = exps;
 	}
 
 	public void generate(MethodVisitor mv, InvokeContext context) {
 		if(owner!=null){
-			Utils.loadArg(owner,mv,context);
-			if(method.getDeclaringClass() != context.getType(owner)){
+			owner.generate(mv, context);
+			if(owner.getExpression()==null || method.getDeclaringClass() != context.getType(owner.getExpression())){
 				mv.visitTypeInsn(CHECKCAST, Type.getInternalName(method.getDeclaringClass()));
 			}
 		}
-		if(args!=null){
-			if(method.getParameterTypes().length != args.length) throw new RuntimeException("参数不匹配!");
-			for(int i=0;i<args.length;i++){
-				Utils.loadArg(args[i],mv,context);
-				if(method.getParameterTypes()[i] != context.getType(args[i])){
+		if(exps!=null){
+			if(method.getParameterTypes().length != exps.length) throw new RuntimeException("参数不匹配!");
+			for(int i=0;i<exps.length;i++){
+				exps[i].generate(mv, context);
+				if(method.getParameterTypes()[i] != context.getType(exps[i].getExpression())){
 					mv.visitTypeInsn(CHECKCAST, Type.getInternalName(method.getParameterTypes()[i]));
 				}
 			}
 		}
 		
-		if((args == null || args.length==0) && owner !=null){
+		if((exps == null || exps.length==0) && owner !=null){
 			throw new RuntimeException("if args is null,owner must be null!");
 		}
 		
@@ -59,7 +58,7 @@ public class MethodInstruction implements Instruction {
 			context.popTopStackType();
 		}
 		
-		if(args==null || args.length==0){
+		if(exps==null || exps.length==0){
 			context.popStackTypes(method.getParameterCount());
 		}
 		
