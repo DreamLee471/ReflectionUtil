@@ -14,7 +14,7 @@ Method println = PrintStream.class.getMethod("println", new Class[]{String.class
 builder.constant("hello") //定义常量
         .store("end") //复制给变量end 以上两句相当于String end = "hello"
         .methodInvoke(concat, Ops.$(0), Ops.v("end")) //调用invoke方法参数数组中的第0个值的concat方法，参数为变量end
-	.store(String.class, "tt")//将以上方法的返回值复制给tt
+	.store("tt")//将以上方法的返回值复制给tt
 	.staticField(System.class, "out") //获取System.out对象
 	.constant("hello world!") //定义常量
 	.methodInvoke(println)  //调用Sytem.out的println对象
