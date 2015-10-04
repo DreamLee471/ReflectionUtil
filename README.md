@@ -20,4 +20,17 @@ builder.constant("hello") //定义常量
 	.methodInvoke(println)  //调用Sytem.out的println对象
 	.ret("tt"); //返回tt
 ```
-
+以上的所有操作，相当于直接编写以下代码
+```java
+public class Generate$2055281021
+  implements Invoker
+{
+  public Object invoke(Object[] paramArrayOfObject)
+  {
+    String str1 = "hello";
+    String str2 = ((String)paramArrayOfObject[0]).concat(str1);
+    System.out.println("hello world!");
+    return str2;
+  }
+}
+```
