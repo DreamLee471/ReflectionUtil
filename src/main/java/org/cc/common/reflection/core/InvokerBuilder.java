@@ -259,7 +259,7 @@ public class InvokerBuilder extends ClassLoader{
 	 * @param constructor
 	 * @return
 	 */
-	public InvokerBuilder newInstance(Class<?> type,Constructor<?> constructor,String... args){
+	public InvokerBuilder newInstance(Class<?> type,Constructor<?> constructor,Expression... args){
 		instructions.add(new NewInstruction(type, constructor,args));
 		return this;
 	}

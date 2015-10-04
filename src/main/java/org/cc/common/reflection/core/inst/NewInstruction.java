@@ -9,7 +9,6 @@ import java.lang.reflect.Constructor;
 
 import org.cc.common.reflection.core.Instruction;
 import org.cc.common.reflection.core.InvokeContext;
-import org.cc.common.reflection.core.util.Utils;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
@@ -22,9 +21,9 @@ public class NewInstruction implements Instruction {
 
 	private Class<?> type;
 	private Constructor<?> constructor;
-	private String[] args;
+	private Expression[] args;
 	
-	public NewInstruction(Class<?> type, Constructor<?> constructor,String[] args) {
+	public NewInstruction(Class<?> type, Constructor<?> constructor,Expression[] args) {
 		this.type = type;
 		this.constructor = constructor;
 		this.args=args;
@@ -37,8 +36,8 @@ public class NewInstruction implements Instruction {
 			if(args!=null){
 				if(constructor.getParameterTypes().length != args.length) throw new RuntimeException("参数不匹配!");
 				for(int i=0;i<args.length;i++){
-					Utils.loadArg(args[i],mv,context);
-					if(constructor.getParameterTypes()[i] != context.getType(args[i])){
+					args[i].generate(mv, context);
+					if(args[i].getExpression()==null || constructor.getParameterTypes()[i] != context.getType(args[i].getExpression())){
 						mv.visitTypeInsn(CHECKCAST, Type.getInternalName(constructor.getParameterTypes()[i]));
 					}
 				}

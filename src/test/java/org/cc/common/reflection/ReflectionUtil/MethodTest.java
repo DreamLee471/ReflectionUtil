@@ -59,6 +59,7 @@ public class MethodTest extends TestCase {
 		builder.dump(bos);
 		assertTrue(bos.toByteArray().length>0);
 		System.out.println(new String(bos.toByteArray()));
+		builder.store2file("d:/tt/ttt1.class");
 	}
 	
 	
@@ -67,9 +68,15 @@ public class MethodTest extends TestCase {
 		Constructor<StringBuilder> init=StringBuilder.class.getConstructor(String.class);
 		Method append = StringBuilder.class.getMethod("append", String.class);
 		Method toString=Object.class.getMethod("toString", new Class[]{});
-		builder.constant("hello").store("a").newInstance(StringBuilder.class, init,"a").store("sb")
-				.constant("world").store("t").methodInvoke(append, Ops.v("sb"), Ops.v("t"))
-				.methodInvoke(toString).ret();
+		builder.constant("hello").
+			store("a").newInstance(StringBuilder.class, init,Ops.v("a"))
+			.store("sb")
+			.constant("world")
+			.store("t")
+			.methodInvoke(append, Ops.v("sb"), Ops.v("t"))
+			.methodInvoke(toString)
+			.ret();
 		assertEquals("helloworld", builder.get().invoke(new Object[]{}));
+		builder.store2file("d:/tt/ttt1.class");
 	}
 }
