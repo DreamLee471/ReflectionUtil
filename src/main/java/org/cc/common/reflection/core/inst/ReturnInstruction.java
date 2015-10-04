@@ -9,15 +9,15 @@ import org.cc.common.reflection.core.InvokeContext;
 
 public class ReturnInstruction implements Instruction {
 
-	private String name;
+	private Expression name;
 	
-	public ReturnInstruction(String name) {
+	public ReturnInstruction(Expression name) {
 		this.name = name;
 	}
 
 	public void generate(MethodVisitor mv, InvokeContext context) {
-		if(name != null && !name.isEmpty()){
-			mv.visitVarInsn(ALOAD, context.var(name));
+		if(name != null){
+			name.generate(mv, context);
 		}
 		mv.visitInsn(ARETURN);
 	}

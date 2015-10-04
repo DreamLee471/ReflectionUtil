@@ -72,7 +72,7 @@ public class InvokerBuilder extends ClassLoader{
 	 * @param args 参数列表（变量名）,null表示取栈上元素，如果args为null，则owner必须为null
 	 * @return
 	 */
-	public InvokerBuilder methodInvoke(Method m,Expression owner,Expression... args){
+	public InvokerBuilder methodInvoke(Method m,Expression owner,Expression[] args){
 		instructions.add(new MethodInstruction(m, owner, args));
 		return this;
 	}
@@ -238,7 +238,7 @@ public class InvokerBuilder extends ClassLoader{
 	 * @param name 返回的变量
 	 * @return
 	 */
-	public InvokerBuilder ret(String name){
+	public InvokerBuilder ret(Expression name){
 		instructions.add(new ReturnInstruction(name));
 		return this;
 	}
@@ -364,6 +364,12 @@ public class InvokerBuilder extends ClassLoader{
 	 * @throws InstantiationException 
 	 */
 	private Invoker generate() throws Exception {
+		//validate
+		
+		if(instructions.size() ==0 || !(instructions.get(instructions.size()-1) instanceof ReturnInstruction)){
+			throw new IllegalArgumentException("instructions is empty or the last instruction is not ret!");
+		}
+		
 		ClassWriter cw=new ClassWriter(ClassWriter.COMPUTE_MAXS);
 		String className="org.cc.Generate$"+this.hashCode();
 		int version0=V1_6;

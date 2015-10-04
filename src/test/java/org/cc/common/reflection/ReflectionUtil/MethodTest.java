@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 
 import org.cc.common.reflection.core.Invoker;
 import org.cc.common.reflection.core.InvokerBuilder;
+import org.cc.common.reflection.core.inst.Expression;
 import org.cc.common.reflection.core.util.Ops;
 
 import junit.framework.TestCase;
@@ -16,12 +17,12 @@ public class MethodTest extends TestCase {
 	public void testMethodInvoke() throws Exception{
 		InvokerBuilder builder=InvokerBuilder.getInstance();
 		Method concat = String.class.getMethod("concat", new Class[]{String.class});
-		builder.constant("hello").store("end").methodInvoke(concat, Ops.$(0), Ops.v("end"))
+		builder.constant("hello").store("end").methodInvoke(concat, Ops.$(0), new Expression[]{Ops.v("end")})
 				.store("tt")
 				.staticField(System.class, "out")
 				.constant("hello world!")
 				.methodInvoke(Ops.m(PrintStream.class, "println", String.class))
-				.ret("tt");
+				.ret(Ops.v("tt"));
 		assertEquals("aaahello", builder.get().invoke(new Object[]{"aaa"}));
 		assertEquals("aaabbbhello", builder.get().invoke(new Object[]{"aaabbb"}));
 		builder.store2file("d:/tt/ttt.class");
@@ -73,10 +74,19 @@ public class MethodTest extends TestCase {
 			.store("sb")
 			.constant("world")
 			.store("t")
-			.methodInvoke(append, Ops.v("sb"), Ops.v("t"))
+			.methodInvoke(append, Ops.v("sb"), new Expression[]{Ops.v("t")})
 			.methodInvoke(toString)
 			.ret();
 		assertEquals("helloworld", builder.get().invoke(new Object[]{}));
 		builder.store2file("d:/tt/ttt1.class");
 	}
+	
+	public void testConstantMethodInvoke() throws Exception{
+		InvokerBuilder builder=InvokerBuilder.getInstance();
+		builder.staticField(System.class, "out");
+		builder.methodInvoke(Ops.m(PrintStream.class, "println", String.class),null, new Expression[]{Ops.c("hello world")})
+		.ret(Ops.c("tt"));
+		builder.get().invoke(null);
+	}
+	
 }

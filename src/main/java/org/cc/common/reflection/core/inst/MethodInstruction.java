@@ -39,7 +39,7 @@ public class MethodInstruction implements Instruction {
 			if(method.getParameterTypes().length != exps.length) throw new RuntimeException("参数不匹配!");
 			for(int i=0;i<exps.length;i++){
 				exps[i].generate(mv, context);
-				if(method.getParameterTypes()[i] != context.getType(exps[i].getExpression())){
+				if(exps[i].getExpression()==null || method.getParameterTypes()[i] != context.getType(exps[i].getExpression())){
 					mv.visitTypeInsn(CHECKCAST, Type.getInternalName(method.getParameterTypes()[i]));
 				}
 			}

@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import org.cc.common.reflection.core.InvokeContext;
 import org.cc.common.reflection.core.inst.Expression;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
 
 public class Ops {
 	
@@ -45,6 +46,28 @@ public class Ops {
 
 			public String getExpression() {
 				return name;
+			}
+		};
+	}
+	
+	/**
+	 * 定义常量
+	 * @param value
+	 * @return
+	 */
+	public static Expression c(final Object value){
+		return new Expression(){
+
+			public void generate(MethodVisitor mv, InvokeContext context) {
+				if(value instanceof Class){
+					mv.visitLdcInsn(Type.getType((Class<?>)value));
+				}else{
+					mv.visitLdcInsn(value);
+				}
+			}
+
+			public String getExpression() {
+				return null;
 			}
 		};
 	}
