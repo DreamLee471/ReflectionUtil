@@ -2,7 +2,7 @@
 反射工具包，利用反射的API直接生成Java字节码，提高执行效率。
 
 ###普通方法调用
-最终生成的Invoker对象，包含一个方法
+所有的命令最终生成到Invoker对象的invoke方法中
 ```java
 public Object invoke(Object[] args);
 ```
