@@ -53,4 +53,4 @@ builder.constant("hello") //定义常量
 	.methodInvoke(toString) //调用toString
 	.ret();  //返回以上调用的结果
 ```
-注意：*在调用newInstance时，会同时调用构造方法和dup指令（将新对象的引用复制一份到栈顶），如果仅仅是调用构造方法而不使用新生成的对象(复制或作为方法的参数等)，在调用完newInstance后要执行pop操作。*
+注意：**在调用newInstance时，会同时调用构造方法和dup指令（将新对象的引用复制一份到栈顶），如果仅仅是调用构造方法而不使用新生成的对象(复制或作为方法的参数等)，在调用完newInstance后要执行pop操作。**
