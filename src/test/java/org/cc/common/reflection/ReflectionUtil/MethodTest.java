@@ -15,13 +15,12 @@ public class MethodTest extends TestCase {
 
 	public void testMethodInvoke() throws Exception{
 		InvokerBuilder builder=InvokerBuilder.getInstance();
-		Method toString = String.class.getMethod("concat", new Class[]{String.class});
-		Method println = PrintStream.class.getMethod("println", new Class[]{String.class});
-		builder.constant("hello").store(String.class, "end").methodInvoke(toString, Ops.$(0), Ops.v("end"))
-				.store(String.class, "tt")
+		Method concat = String.class.getMethod("concat", new Class[]{String.class});
+		builder.constant("hello").store("end").methodInvoke(concat, Ops.$(0), Ops.v("end"))
+				.store("tt")
 				.staticField(System.class, "out")
 				.constant("hello world!")
-				.methodInvoke(println)
+				.methodInvoke(Ops.m(PrintStream.class, "println", String.class))
 				.ret("tt");
 		assertEquals("aaahello", builder.get().invoke(new Object[]{"aaa"}));
 		assertEquals("aaabbbhello", builder.get().invoke(new Object[]{"aaabbb"}));

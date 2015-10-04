@@ -3,6 +3,9 @@ package org.cc.common.reflection.core.util;
 import static org.objectweb.asm.Opcodes.AALOAD;
 import static org.objectweb.asm.Opcodes.ALOAD;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import org.cc.common.reflection.core.InvokeContext;
 import org.cc.common.reflection.core.inst.Expression;
 import org.objectweb.asm.MethodVisitor;
@@ -44,5 +47,30 @@ public class Ops {
 				return name;
 			}
 		};
+	}
+	
+	/**
+	 * 获取方法，为了减少键盘敲击次数
+	 * @param type
+	 * @param methodName
+	 * @param paramTyps
+	 * @return
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
+	public static Method m(Class<?> type,String methodName,Class<?>... paramTyps) throws NoSuchMethodException, SecurityException{
+		return type.getMethod(methodName, paramTyps);
+	}
+	
+	/**
+	 * 获取类中的域
+	 * @param type
+	 * @param name
+	 * @return
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 */
+	public static Field f(Class<?> type,String name) throws NoSuchFieldException, SecurityException{
+		return type.getDeclaredField(name);
 	}
 }
