@@ -43,9 +43,9 @@ public class NewInstruction implements Instruction {
 					}
 				}
 			}
-			mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(type), "<init>", Type.getConstructorDescriptor(constructor));
+			mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(type), "<init>", Type.getConstructorDescriptor(constructor),false);
 		}else{
-			mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(type), "<init>", "()V");
+			mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(type), "<init>", "()V",false);
 		}
 		context.setTopStackType(type);
 	}

@@ -30,7 +30,7 @@ public class StaticMethodInstruction implements Instruction {
 				}
 			}
 		}
-		mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(method.getDeclaringClass()), method.getName(), Type.getMethodDescriptor(method));
+		mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(method.getDeclaringClass()), method.getName(), Type.getMethodDescriptor(method),false);
 		
 		if(args==null || args.length==0){
 			context.popStackTypes(method.getParameterCount());

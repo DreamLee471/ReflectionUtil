@@ -25,28 +25,28 @@ public class BoxingInstruction implements Instruction {
 		if(type!=null && type.isPrimitive()){
 			Class<?> newType=null;
 			if(type == Integer.TYPE){
-				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Integer.class), "valueOf", "("+Type.getDescriptor(int.class)+")"+Type.getDescriptor(Integer.class));
+				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Integer.class), "valueOf", "("+Type.getDescriptor(int.class)+")"+Type.getDescriptor(Integer.class),false);
 				newType=Integer.class;
 			}else if(type == Long.TYPE){
-				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Long.class), "valueOf", "("+Type.getDescriptor(long.class)+")"+Type.getDescriptor(Long.class));
+				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Long.class), "valueOf", "("+Type.getDescriptor(long.class)+")"+Type.getDescriptor(Long.class),false);
 				newType=Long.class;
 			}else if(type == Character.TYPE){
-				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Character.class), "valueOf", "("+Type.getDescriptor(char.class)+")"+Type.getDescriptor(Character.class));
+				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Character.class), "valueOf", "("+Type.getDescriptor(char.class)+")"+Type.getDescriptor(Character.class),false);
 				newType=Character.class;
 			}else if(type == Float.TYPE){
-				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Float.class), "valueOf", "("+Type.getDescriptor(float.class)+")"+Type.getDescriptor(Float.class));
+				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Float.class), "valueOf", "("+Type.getDescriptor(float.class)+")"+Type.getDescriptor(Float.class),false);
 				newType=Float.class;
 			}else if(type == Boolean.TYPE){
-				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Boolean.class), "valueOf", "("+Type.getDescriptor(boolean.class)+")"+Type.getDescriptor(Boolean.class));
+				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Boolean.class), "valueOf", "("+Type.getDescriptor(boolean.class)+")"+Type.getDescriptor(Boolean.class),false);
 				newType=Boolean.class;
 			}else if(type == Byte.TYPE){
-				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Byte.class), "valueOf", "("+Type.getDescriptor(byte.class)+")"+Type.getDescriptor(Byte.class));
+				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Byte.class), "valueOf", "("+Type.getDescriptor(byte.class)+")"+Type.getDescriptor(Byte.class),false);
 				newType=Byte.class;
 			}else if(type == Short.TYPE){
-				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Short.class), "valueOf", "("+Type.getDescriptor(short.class)+")"+Type.getDescriptor(Short.class));
+				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Short.class), "valueOf", "("+Type.getDescriptor(short.class)+")"+Type.getDescriptor(Short.class),false);
 				newType=Short.class;
 			}else if(type == Double.TYPE){
-				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Double.class), "valueOf", "("+Type.getDescriptor(double.class)+")"+Type.getDescriptor(Double.class));
+				mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Double.class), "valueOf", "("+Type.getDescriptor(double.class)+")"+Type.getDescriptor(Double.class),false);
 				newType=Double.class;
 			}
 			context.replaceTopType(newType);

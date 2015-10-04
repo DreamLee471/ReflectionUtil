@@ -1,6 +1,13 @@
 package org.cc.common.reflection.core;
 
-import static org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
+import static org.objectweb.asm.Opcodes.ACC_SUPER;
+import static org.objectweb.asm.Opcodes.ALOAD;
+import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
+import static org.objectweb.asm.Opcodes.RETURN;
+import static org.objectweb.asm.Opcodes.V1_6;
+import static org.objectweb.asm.Opcodes.V1_7;
+import static org.objectweb.asm.Opcodes.V1_8;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
@@ -11,7 +18,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.cc.common.reflection.core.inst.BoxingInstruction;
 import org.cc.common.reflection.core.inst.CastInstruction;
@@ -359,7 +365,7 @@ public class InvokerBuilder extends ClassLoader{
 	 */
 	private Invoker generate() throws Exception {
 		ClassWriter cw=new ClassWriter(ClassWriter.COMPUTE_MAXS);
-		String className="org.cc.Generate"+(UUID.randomUUID().toString().replace("-", ""));
+		String className="org.cc.Generate$"+this.hashCode();
 		int version0=V1_6;
 		switch(version){
 		case ReflectionConstants.Version.V6:
@@ -373,7 +379,7 @@ public class InvokerBuilder extends ClassLoader{
 		
 		MethodVisitor init = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
 		init.visitVarInsn(ALOAD, 0);
-		init.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V");
+		init.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V",false);
 		init.visitInsn(RETURN);
 		init.visitMaxs(1, 1);
 		init.visitEnd();
