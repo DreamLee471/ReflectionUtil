@@ -53,4 +53,19 @@ builder.constant("hello") //定义常量
 	.methodInvoke(toString) //调用toString
 	.ret();  //返回以上调用的结果
 ```
+
+以上所有操作相当于直接编写以下代码：
+```java
+public class Generate$918221580
+  implements Invoker
+{
+  public Object invoke(Object[] paramArrayOfObject)
+  {
+    String str1 = "hello";
+    StringBuilder localStringBuilder = new StringBuilder(str1);
+    String str2 = "world";
+    return localStringBuilder.append(str2).toString();
+  }
+}
+```
 注意：**在调用newInstance时，会同时调用构造方法和dup指令（将新对象的引用复制一份到栈顶），如果仅仅是调用构造方法而不使用新生成的对象(复制或作为方法的参数等)，在调用完newInstance后要执行pop操作。**
