@@ -15,6 +15,8 @@ public class InvokeContext {
 	
 	private Map<String,Integer> vars=new HashMap<String,Integer>();
 	
+	private int version;
+	
 	/**
 	 * 本地变量的类型
 	 */
@@ -84,5 +86,13 @@ public class InvokeContext {
 
 	void setNextInst(Instruction nextInst) {
 		this.nextInst = nextInst;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 }

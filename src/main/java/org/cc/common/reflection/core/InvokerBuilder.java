@@ -386,6 +386,7 @@ public class InvokerBuilder extends ClassLoader{
 		
 		MethodVisitor invoke = cw.visitMethod(ACC_PUBLIC, "invoke", "([Ljava/lang/Object;)Ljava/lang/Object;", null, null);
 		InvokeContext context=new InvokeContext();
+		context.setVersion(version);
 		for(int i=0;i<instructions.size();i++){
 			if(i<instructions.size()-1){
 				context.setNextInst(instructions.get(i+1));
