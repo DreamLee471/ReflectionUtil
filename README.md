@@ -69,3 +69,33 @@ public class Generate$918221580
 }
 ```
 注意：**在调用newInstance时，会同时调用构造方法和dup指令（将新对象的引用复制一份到栈顶），如果仅仅是调用构造方法而不使用新生成的对象(复制或作为方法的参数等)，在调用完newInstance后要执行pop操作。**
+
+###dump及写文件
+编写完所有指令后，可以将字节码dump成jvm指令或写入文件中。使用如下：
+```java
+InvokerBuilder builder=InvokerBuilder.getInstance();
+Method concat = String.class.getMethod("concat", new Class[]{String.class});
+builder.constant("hello").constant("world").methodInvoke(concat).ret();
+ByteArrayOutputStream bos=new ByteArrayOutputStream();
+builder.dump(bos);
+System.out.println(new String(bos.toByteArray()));
+builder.store2file("d:/tt/ttt1.class");
+```
+
+输出如下:
+```java
+public class org.cc.Generate$918221580 extends java.lang.Object implements org.cc.common.reflection.core.Invoker{
+public org.cc.Generate$918221580();
+  Code:
+   0:	aload_0
+   1:	invokespecial	#10; //Method java/lang/Object."<init>":()V
+   4:	return
+
+public java.lang.Object invoke(java.lang.Object[]);
+  Code:
+   0:	ldc	#14; //String hello
+   2:	ldc	#16; //String world
+   4:	invokevirtual	#22; //Method java/lang/String.concat:(Ljava/lang/String;)Ljava/lang/String;
+   7:	areturn
+}
+```
