@@ -34,3 +34,23 @@ public class Generate$2055281021
   }
 }
 ```
+
+###创建对象
+直接调用new创建
+具体代码如下：
+```java
+InvokerBuilder builder=InvokerBuilder.getInstance();
+Constructor<StringBuilder> init=StringBuilder.class.getConstructor(String.class);
+Method append = StringBuilder.class.getMethod("append", String.class);
+Method toString=Object.class.getMethod("toString", new Class[]{});
+builder.constant("hello") //定义常量
+	.store("a") //复制给变量a
+	.newInstance(StringBuilder.class, init,Ops.v("a")) //调用new指令，创建对象同时调用构造函数
+	.store("sb")//复制给sb变量
+	.constant("world")//定义常量"world"
+	.store("t") //复制给变量t
+	.methodInvoke(append, Ops.v("sb"), Ops.v("t")) //调用append方法
+	.methodInvoke(toString) //调用toString
+	.ret();  //返回以上调用的结果
+```
+注意：*在调用newInstance时，会同时调用构造方法和dup指令（将新对象的引用复制一份到栈顶），如果仅仅是调用构造方法而不使用新生成的对象(复制或作为方法的参数等)，在调用完newInstance后要执行pop操作。*
