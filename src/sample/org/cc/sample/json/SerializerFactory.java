@@ -52,18 +52,22 @@ public class SerializerFactory {
 							}else{
 								isFirst=false;
 							}
+							write(builder,f.getName(),String.class);
+							
+							builder.load(JSONWriter.class,"writer").constant(":").constant(false);
+							builder.methodInvoke(Ops.m(JSONWriter.class, "write", String.class,boolean.class));
 							if(f.getType().isPrimitive() || f.getType() == String.class){
-								write(builder,f.getName(),String.class);
-								
-								builder.load(JSONWriter.class,"writer").constant(":").constant(false);
-								builder.methodInvoke(Ops.m(JSONWriter.class, "write", String.class,boolean.class));
-								
 								builder.load(JSONWriter.class,"writer");
 								builder.load(c, "obj");
 								builder.methodInvoke(Ops.m(c, "get"+f.getName().substring(0, 1).toUpperCase()+f.getName().substring(1), new Class[]{}));
 								builder.methodInvoke(Ops.m(JSONWriter.class, "write", f.getType()));
 							}else{
-								//TODO
+								builder.load(SerializerFactory.class, "factory").constant(f.getType());
+								builder.methodInvoke(Ops.m(SerializerFactory.class, "get", Class.class));
+								builder.load(c, "obj");
+								builder.methodInvoke(Ops.m(c, "get"+f.getName().substring(0, 1).toUpperCase()+f.getName().substring(1), new Class[]{}));
+								builder.load(JSONWriter.class, "writer");
+								builder.methodInvoke(Ops.m(Serializer.class,"doSerialize",new Class[]{Object.class,JSONWriter.class}));
 							}
 						}
 						write(builder,'}',char.class);
