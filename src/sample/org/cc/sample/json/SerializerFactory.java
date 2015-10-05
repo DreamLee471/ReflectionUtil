@@ -63,7 +63,7 @@ public class SerializerFactory {
 								builder.methodInvoke(Ops.m(c, "get"+f.getName().substring(0, 1).toUpperCase()+f.getName().substring(1), new Class[]{}));
 								builder.methodInvoke(Ops.m(JSONWriter.class, "write", f.getType()));
 							}else{
-								
+								//TODO
 							}
 						}
 						write(builder,'}',char.class);
