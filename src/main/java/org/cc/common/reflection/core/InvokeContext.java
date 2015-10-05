@@ -68,8 +68,10 @@ public class InvokeContext {
 	}
 	
 	public void replaceTopType(Class<?> type){
-		this.stackTopType.pop();
-		this.stackTopType.push(type);
+		if(!this.stackTopType.isEmpty()){
+			this.stackTopType.pop();
+			this.stackTopType.push(type);
+		}
 	}
 
 	public Instruction getPreInst() {

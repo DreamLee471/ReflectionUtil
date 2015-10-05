@@ -19,6 +19,8 @@ public class StoreInstruction implements Instruction {
 	public void generate(MethodVisitor mv, InvokeContext context) {
 		if(type == null){
 			type=context.getTopStackType();
+		}else{
+			context.setTopStackType(type);
 		}
 		int vindex = context.var(name,type);
 		if(type.isPrimitive()){
