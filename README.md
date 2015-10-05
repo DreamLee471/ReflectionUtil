@@ -99,3 +99,4 @@ public java.lang.Object invoke(java.lang.Object[]);
    7:	areturn
 }
 ```
+**更多使用参见[sample](https://github.com/DreamLee471/ReflectionUtil/tree/master/src/sample/org/cc/sample/json)**
