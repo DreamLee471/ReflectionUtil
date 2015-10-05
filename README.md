@@ -12,9 +12,9 @@ InvokerBuilder builder=InvokerBuilder.getInstance();
 Method concat = String.class.getMethod("concat", new Class[]{String.class});
 Method println = PrintStream.class.getMethod("println", new Class[]{String.class});
 builder.constant("hello") //定义常量
-        .store("end") //复制给变量end 以上两句相当于String end = "hello"
+        .store("end") //赋值给变量end 以上两句相当于String end = "hello"
         .methodInvoke(concat, Ops.$(0), Ops.v("end")) //调用invoke方法参数数组中的第0个值的concat方法，参数为变量end
-	.store("tt")//将以上方法的返回值复制给tt
+	.store("tt")//将以上方法的返回值赋值给tt
 	.staticField(System.class, "out") //获取System.out对象
 	.constant("hello world!") //定义常量
 	.methodInvoke(println)  //调用Sytem.out的println对象
@@ -44,11 +44,11 @@ Constructor<StringBuilder> init=StringBuilder.class.getConstructor(String.class)
 Method append = StringBuilder.class.getMethod("append", String.class);
 Method toString=Object.class.getMethod("toString", new Class[]{});
 builder.constant("hello") //定义常量
-	.store("a") //复制给变量a
+	.store("a") //赋值给变量a
 	.newInstance(StringBuilder.class, init,Ops.v("a")) //调用new指令，创建对象同时调用构造函数
-	.store("sb")//复制给sb变量
+	.store("sb")//赋值给sb变量
 	.constant("world")//定义常量"world"
-	.store("t") //复制给变量t
+	.store("t") //赋值给变量t
 	.methodInvoke(append, Ops.v("sb"), Ops.v("t")) //调用append方法
 	.methodInvoke(toString) //调用toString
 	.ret();  //返回以上调用的结果
