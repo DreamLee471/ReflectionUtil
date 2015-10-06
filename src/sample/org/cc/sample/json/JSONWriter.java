@@ -8,12 +8,18 @@ import java.util.function.Consumer;
  *
  */
 public class JSONWriter {
+	
+	private static ThreadLocal<char[]> THREAD_LOCAL=new ThreadLocal<char[]>();
+	
 	private char[] data;
 	
 	private int current;
 	
 	public JSONWriter(){
-		data=new char[1024];
+		if(THREAD_LOCAL.get()==null){
+			THREAD_LOCAL.set(new char[1024]);
+		}
+		data=THREAD_LOCAL.get();
 	}
 	
 	public void write(char c){
@@ -84,6 +90,10 @@ public class JSONWriter {
 		}
 		consumer.accept(current);
 		current++;
+	}
+	
+	public void close(){
+		
 	}
 	
 	
