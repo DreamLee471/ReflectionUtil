@@ -21,18 +21,37 @@ public class JSONWriter {
 	}
 	
 	
-	public void write(long l){
-		write(String.valueOf(l),false);
+	public void write(long i){
+		if (i == Long.MIN_VALUE) {
+            write("-9223372036854775808");
+            return;
+        }
+
+        int size = (i < 0) ? IOUtils.stringSize(-i) + 1 : IOUtils.stringSize(i);
+
+        int newcount = current + size;
+
+        IOUtils.getChars(i, newcount, data);
+
+        current = newcount;
 	}
 	
 	
-	public void write(String s,boolean quot){
-		if(quot){
-			s="\"" + s + "\"";
-		}
-		for(char c:s.toCharArray()){
-			writeWithCheck(i -> data[i]=c);
-		}
+	public void write(String text,boolean quot){
+
+        int len = text.length();
+        int newcount = current + len + (quot?2:0);
+        
+        int start = current + (quot?1:0);
+        
+        if(quot)
+        	data[current] = '\"';
+        text.getChars(0, len, data, start);
+
+        
+        current = newcount;
+        if(quot)
+        	data[current - 1] = '\"';
 	}
 	
 	
@@ -40,8 +59,19 @@ public class JSONWriter {
 		write(s,true);
 	}
 	
-	public void write(int idata){
-		write(String.valueOf(idata),false);
+	public void write(int i){
+		if (i == Integer.MIN_VALUE) {
+            write("-2147483648");
+            return;
+        }
+
+        int size = (i < 0) ? IOUtils.stringSize(-i) + 1 : IOUtils.stringSize(i);
+
+        int newcount = current + size;
+
+        IOUtils.getChars(i, newcount, data);
+
+        current = newcount;
 	}
 	
 	

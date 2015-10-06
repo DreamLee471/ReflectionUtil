@@ -8,7 +8,6 @@ package org.cc.sample.json;
 public class JSONObject {
 	
 	private static SerializerFactory factory=new SerializerFactory();
-	
 	public static String toJSONString(Object obj){
 		Serializer s = factory.get(obj.getClass());
 		JSONWriter writer=new JSONWriter();

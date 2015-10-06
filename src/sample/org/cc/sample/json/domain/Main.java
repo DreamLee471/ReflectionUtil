@@ -14,6 +14,12 @@ public class Main {
 		
 		bean.setBean(b);
 		
+		long start=System.currentTimeMillis();
+		for(int i=0;i<1000000;i++){
+			JSONObject.toJSONString(bean);
+		}
+		System.out.println("cost:"+(System.currentTimeMillis()-start));
+		System.out.println("cost/per:"+(System.currentTimeMillis()-start)/1000000.0);
 		System.out.println(JSONObject.toJSONString(bean));
 	}
 

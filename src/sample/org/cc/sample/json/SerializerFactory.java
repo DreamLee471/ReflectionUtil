@@ -85,7 +85,6 @@ public class SerializerFactory {
 				builder.load(JSONWriter.class,"writer").constant(c);
 				builder.methodInvoke(Ops.m(JSONWriter.class, "write", type));
 			}
-
 		};
 	}
 }
