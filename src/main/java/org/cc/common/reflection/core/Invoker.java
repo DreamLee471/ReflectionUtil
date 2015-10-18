@@ -8,7 +8,7 @@ package org.cc.common.reflection.core;
 public interface Invoker {
 	
 	/**
-	 * 通知方法调用
+	 * 通用方法调用
 	 * @param args
 	 * @return
 	 */
